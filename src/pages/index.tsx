@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface ButtonProps
@@ -57,9 +57,11 @@ export default function Home() {
       setError("All players should have unique names");
       return;
     }
-
+  
     setError("");
+    return;
   };
+  
 
   return (
     <>
