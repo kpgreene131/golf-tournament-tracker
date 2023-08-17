@@ -52,7 +52,7 @@ export default function Home() {
     return nameSet.size === names.length;
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     if (!validateNames(playerNames)) {
       setError("All players should have unique names");
       return;
