@@ -1,12 +1,75 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { LoadingSpinner } from "~/components/loading";
 import { api } from "~/utils/api";
+
+const PlayerForm = () => {
+  const [players, setPlayers] = useState<{name:string, handicap:number}[]>(Array.from({ length: 4 }, () => ({ name: '', handicap: 0 })));
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newNames = [...players];
+    newNames[index]!.name = e.target.value;
+    setPlayers(newNames);
+  };
+
+  const handleHandicapChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newNames = [...players];
+    newNames[index]!.handicap = Number(e.target.value);
+    setPlayers(newNames);
+  };
+
+  const addNewPlayer = () => {
+    setPlayers([...players, {name:'', handicap: 0}]);
+  };
+
+  console.log(players)
+
+  return (
+    <div className="p-4">
+      <form>
+        <div className="flex flex-row">
+          <div className="w-full mx-2">Player Name</div>
+          <div className="w-full mx-2">Player Handicap</div>
+        </div>
+        {players.map((player, index) => (
+          <div className="mb-2 flex flex-row" key={index}>
+            <input
+              type="text"
+              placeholder={`Player ${index + 1}`}
+              value={player.name}
+              onChange={(e) => handleNameChange(e, index)}
+              className="w-full border p-2 mx-2"
+            />
+            <input
+              type="number"
+              value={player.handicap}
+              onChange={(e) => handleHandicapChange(e, index)}
+              className="w-full border p-2 mx-2"
+            />
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addNewPlayer}
+          className="bg-blue-500 p-2 text-white"
+        >
+          Add Player
+        </button>
+        <button
+          type="button"
+          onClick={addNewPlayer}
+          className="bg-blue-500 p-2 text-white float-right"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+};
 
 const CoursePage: NextPage = () => {
   const router = useRouter();
@@ -32,42 +95,14 @@ const CoursePage: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-800">
         <div className="container flex flex-col items-center justify-center gap-4 bg-slate-700 px-4 py-16 text-slate-200">
           {course ? (
-            <div>
-              <div className="text-center">{course.name}</div>
-              <table className="min-w-full border-collapse">
-                <thead>
-                  <tr>
-                    <td>Hole</td>
-                    {course?.holes.map((hole, index) => (
-                      <th className="w-auto border p-2" key={index}>
-                        {hole.number}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Par</td>
-                    {course?.holes.map((hole, index) => (
-                      <td className="w-auto border p-2" key={index}>
-                        {hole.par}
-                      </td>
-                    ))}
-                  </tr>
-                  <tr>
-                    <td>Handicap</td>
-                    {course?.holes.map((hole, index) => (
-                      <td className="w-auto border p-2" key={index}>
-                        {hole.handicap}
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <div className="text-center">
+              <div>{course.name}</div>
+              <a href={`/scorecard/${courseId}`} target="_blank">See scorecard</a>
+              </div>
           ) : (
             <LoadingSpinner />
           )}
+          <PlayerForm />
         </div>
       </main>
     </>
