@@ -25,6 +25,10 @@ const PlayerForm = () => {
     setPlayers([...players, {name:'', handicap: 0}]);
   };
 
+  const handleSubmit = () => {
+    
+  }
+
   console.log(players)
 
   return (
@@ -61,7 +65,7 @@ const PlayerForm = () => {
         </button>
         <button
           type="button"
-          onClick={addNewPlayer}
+          onClick={handleSubmit}
           className="bg-blue-500 p-2 text-white float-right"
         >
           Submit
